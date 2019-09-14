@@ -1,0 +1,33 @@
+$.get('https://blog.woodprime.com.br/wp-json/wp/v2/posts?filter[orderby]=date&per_page=4&_embed').done(function(data) {
+    data.forEach(function(i){ 
+        var date = i.date; 
+        function formatDate(date) {
+            var monthNames = [
+              "Janeiro", "Fevereiro", "Março",
+              "Abril", "Maio", "Junho", "Julho",
+              "Agosto", "Setembro", "Outubro",
+              "Novembro", "Dezembro"
+            ];
+          
+            var day = date.getDate(date);
+            var monthIndex = date.getMonth(date);
+            var year = date.getFullYear(date);
+          
+            return day + ' de ' + monthNames[monthIndex] + ' de ' + year;
+          }
+        var image = i._embedded['wp:featuredmedia'][0].source_url;
+        var title = i.title.rendered;
+        var description = i.excerpt.rendered;
+        var link = i.link; 
+        var html ='<li class="list__post-item">' +
+            '<div class="list__post-thumbnail"><img src="'+ image + '" alt="' + title + '" title="' + title + '"/></div>' +
+            '<div class="list__post-content">' +
+                '<span class="list__post-title">' + title + '</span>' +
+                '<span class="list__post-data">' + formatDate(new Date(date))  + '</span>' +
+                '<span class="list__post-description">' + description + '</span>' +
+                '<a class="list__post-link" target="_blank" href="' +link + '">Continuar lendo...</a>' +
+            '</div>' +
+        '</li>';
+        $('.list__post').append($(html));
+    });
+});
